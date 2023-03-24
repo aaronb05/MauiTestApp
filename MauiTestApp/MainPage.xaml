@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:model="clr-namespace:MauiTestApp.Model"
+             xmlns:viewmodel="clr-namespace:MauiTestApp.ViewModel"
+             x:DataType="viewmodel:MonkeyVM"
+             Title="{Binding Title}"
+             x:Class="MauiTestApp.MainPage">
+             
+    <VerticalStackLayout Spacing="25" Padding="10,0" VerticalOptions="Center">                
+        <Label 
+            Text="Monkey List"
+            SemanticProperties.HeadingLevel="Level2"
+            FontSize="32"
+            HorizontalOptions="Center" />
+
+        <CollectionView HeightRequest="500" BackgroundColor="LightBlue" ItemsSource="{Binding Monkeys}" SelectionMode="None">       
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="model:Monkey">
+                    <Grid Padding="10">
+                        <Frame Padding="0" HeightRequest="125">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer 
+                                    NumberOfTapsRequired="1" 
+                                    CommandParameter="{Binding .}" 
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MonkeyVM}}, Path=GoToDetailsCommand}" />
+                            </Frame.GestureRecognizers>
+                            <HorizontalStackLayout>                                
+                                <Image Aspect="AspectFill" Source="{Binding Image}" WidthRequest="125" HeightRequest="125" />
+                                <VerticalStackLayout VerticalOptions="Center" Padding="10">
+                                    <Label Text="{Binding Name}" TextTransform="Uppercase" FontAttributes="Bold"/>
+                                    <Label Text="{Binding Location}" LineBreakMode="WordWrap" LineHeight="2"/>
+                                </VerticalStackLayout>
+                            </HorizontalStackLayout>
+                        </Frame>
+                    </Grid>                  
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Grid ColumnDefinitions="*,*" ColumnSpacing="5" RowDefinitions="*,auto" RowSpacing="0" Padding="5">
+            <Button 
+                Grid.Column="0"
+                Text="Get Monkeys"
+                Command="{Binding GetMonkeysCommand}"
+                IsEnabled="{Binding IsNotBusy}"
+                HorizontalOptions="Center" 
+                WidthRequest="150"/>
+            <ActivityIndicator 
+                IsVisible="{Binding IsBusy}"
+                IsRunning="{Binding IsBusy}"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="FillAndExpand"
+                Grid.RowSpan="2"
+                Grid.ColumnSpan="2"
+                />
+
+            <Button 
+                Grid.Column="1"
+                Text="Locate"
+                SemanticProperties.Hint="Locate monkeys near me"          
+                HorizontalOptions="Center" 
+                WidthRequest="150"/>
+        </Grid>
+    </VerticalStackLayout>
+
+</ContentPage>
